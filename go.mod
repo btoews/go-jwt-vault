@@ -1,4 +1,4 @@
-module github.com/cbws/go-jwt-vault
+module github.com/superfly/go-jwt-vault
 
 go 1.14
 
