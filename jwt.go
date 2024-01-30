@@ -113,7 +113,7 @@ func (s SigningMethodVaultTransit) Sign(signingString string, key interface{}) (
 		return nil, fmt.Errorf("unknown hasher %T", s.hasher)
 	}
 
-	_, signature, err := signVault(*config, config.Client, hashType, digest.Sum(nil))
+	_, signature, err := signVault(ctx, *config, config.Client, hashType, digest.Sum(nil))
 	if err != nil {
 		return nil, fmt.Errorf("could not sign using Vault: %+v", err)
 	}
@@ -154,7 +154,7 @@ func (s SigningMethodVaultTransit) Verify(signingString string, signature []byte
 		return fmt.Errorf("unknown hasher %T", s.hasher)
 	}
 
-	valid, err := verifyVault(*config, config.Client, hashType, signature, digest.Sum(nil))
+	valid, err := verifyVault(ctx, *config, config.Client, hashType, signature, digest.Sum(nil))
 	if err != nil {
 		return err
 	}
