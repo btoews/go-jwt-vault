@@ -11,8 +11,12 @@ import (
 	vault "github.com/hashicorp/vault/api"
 )
 
-func signVault(ctx context.Context, config VaultConfig, vault *vault.Client, hash string, hashed []byte) (int, []byte, error) {
-	response, err := vault.Logical().WriteWithContext(ctx, fmt.Sprintf("%s/sign/%s", config.KeyPath, config.KeyName), map[string]interface{}{
+type contextWriter interface {
+	WriteWithContext(context.Context, string, map[string]interface{}) (*vault.Secret, error)
+}
+
+func signVault(ctx context.Context, config VaultConfig, logical contextWriter, hash string, hashed []byte) (int, []byte, error) {
+	response, err := logical.WriteWithContext(ctx, fmt.Sprintf("%s/sign/%s", config.KeyPath, config.KeyName), map[string]interface{}{
 		"key_version":          config.KeyVersion,
 		"input":                base64.StdEncoding.EncodeToString(hashed),
 		"prehashed":            true,
@@ -38,7 +42,7 @@ func signVault(ctx context.Context, config VaultConfig, vault *vault.Client, has
 	return keyVersion, bla, nil
 }
 
-func verifyVault(ctx context.Context, config VaultConfig, vault *vault.Client, hash string, signature, signingString []byte) (bool, error) {
+func verifyVault(ctx context.Context, config VaultConfig, logical contextWriter, hash string, signature, signingString []byte) (bool, error) {
 	requestData := map[string]interface{}{
 		"input":                base64.StdEncoding.EncodeToString(signingString),
 		"prehashed":            true,
@@ -47,7 +51,7 @@ func verifyVault(ctx context.Context, config VaultConfig, vault *vault.Client, h
 		"marshaling_algorithm": "jws",
 		"hash_algorithm":       hash,
 	}
-	response, err := vault.Logical().WriteWithContext(ctx, fmt.Sprintf("%s/verify/%s", config.KeyPath, config.KeyName), requestData)
+	response, err := logical.WriteWithContext(ctx, fmt.Sprintf("%s/verify/%s", config.KeyPath, config.KeyName), requestData)
 	if err != nil {
 		return false, err
 	}
