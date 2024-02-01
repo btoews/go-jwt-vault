@@ -42,7 +42,7 @@ func VaultFromContext(ctx context.Context) (*VaultConfig, bool) {
 func init() {
 	// RS256
 	SigningMethodVRS256 = &SigningMethodVaultTransit{
-		"VRS256",
+		jwt.GetSigningMethod("RS256"),
 		jwt.SigningMethodRS256,
 		crypto.SHA256,
 	}
@@ -51,7 +51,7 @@ func init() {
 	})
 	// RS384
 	SigningMethodVRS384 = &SigningMethodVaultTransit{
-		"VRS384",
+		jwt.GetSigningMethod("RS384"),
 		jwt.SigningMethodRS384,
 		crypto.SHA384,
 	}
@@ -60,7 +60,7 @@ func init() {
 	})
 	// RS512
 	SigningMethodVRS512 = &SigningMethodVaultTransit{
-		"VRS512",
+		jwt.GetSigningMethod("RS512"),
 		jwt.SigningMethodRS512,
 		crypto.SHA512,
 	}
@@ -70,7 +70,7 @@ func init() {
 }
 
 type SigningMethodVaultTransit struct {
-	alg      string
+	parent   jwt.SigningMethod
 	override jwt.SigningMethod
 	hasher   crypto.Hash
 }
@@ -83,7 +83,7 @@ func (s SigningMethodVaultTransit) Sign(signingString string, key interface{}) (
 	case context.Context:
 		ctx = k
 	default:
-		return nil, jwt.ErrInvalidKey
+		return s.parent.Sign(signingString, key)
 	}
 
 	config, ok := VaultFromContext(ctx)
@@ -128,7 +128,7 @@ func (s SigningMethodVaultTransit) Verify(signingString string, signature []byte
 	case context.Context:
 		ctx = k
 	default:
-		return jwt.ErrInvalidKey
+		return s.parent.Verify(signingString, signature, key)
 	}
 
 	config, ok := VaultFromContext(ctx)
@@ -166,16 +166,5 @@ func (s SigningMethodVaultTransit) Verify(signingString string, signature []byte
 }
 
 func (s SigningMethodVaultTransit) Alg() string {
-	return s.alg
-}
-
-func (s SigningMethodVaultTransit) Override() {
-	s.alg = s.override.Alg()
-	jwt.RegisterSigningMethod(s.alg, func() jwt.SigningMethod {
-		return s
-	})
-}
-
-func (s *SigningMethodVaultTransit) Hash() crypto.Hash {
-	return s.hasher
+	return s.parent.Alg()
 }
