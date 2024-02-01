@@ -29,7 +29,7 @@ func TestVaultSign(t *testing.T) {
 		},
 	}}
 
-	jwtToken := jwt.NewWithClaims(SigningMethodVRS256, jwt.MapClaims{
+	jwtToken := jwt.NewWithClaims(SigningMethodRS256, jwt.MapClaims{
 		"foo": "bar",
 		"nbf": time.Date(2015, 10, 10, 12, 0, 0, 0, time.UTC).Unix(),
 	})
@@ -43,7 +43,7 @@ func TestVaultSign(t *testing.T) {
 
 	payload, err := jwtToken.SignedString(key)
 	assert.NoError(t, err)
-	assert.Equal(t, payload, "eyJhbGciOiJWUlMyNTYiLCJ0eXAiOiJKV1QifQ.eyJmb28iOiJiYXIiLCJuYmYiOjE0NDQ0Nzg0MDB9.TG1jUE5NSlNYMHBkX0s0Z0d1MTFDVGlCUGg1cGU1MzRTREFpbHlsX09fR08xcGpBY1NybG1pblRPT0lJeE41Mk5hV2xpVEZiXzgtR29vSE5DQXJjaVhnV0NRSTRQMnF6THZnNzNKZ0FSNFdtc2hXWHZVbVJiSlBTS2pSOE05SFI5X1VXTXF2Q19ORlVvSUxKSWN0RThGeVdLOUVLQjFvd2lmMVVrUHNXN25CNFVzenJCbWRFMUxad2N5VVMxaF9nd3d5UGVlZXVOMVZGRTZacGItOTlBaG14ZUVHNmNNUHplek1KaENRR2RDbmJkcXphTHc4c1lKdXJIOW5MTWx6NVpZZFgtMWExU2Z3azBtQkRMOHVINjkxUU5DOUM4NDloM2RUdHZkaGl6MWM4WkRwZkQ4Rml1YWJXWFNzMTFHWXFvQTc1TmQySjUwbEN4TWR5OGVfNWxn")
+	assert.Equal(t, payload, "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJiYXIiLCJuYmYiOjE0NDQ0Nzg0MDB9.TG1jUE5NSlNYMHBkX0s0Z0d1MTFDVGlCUGg1cGU1MzRTREFpbHlsX09fR08xcGpBY1NybG1pblRPT0lJeE41Mk5hV2xpVEZiXzgtR29vSE5DQXJjaVhnV0NRSTRQMnF6THZnNzNKZ0FSNFdtc2hXWHZVbVJiSlBTS2pSOE05SFI5X1VXTXF2Q19ORlVvSUxKSWN0RThGeVdLOUVLQjFvd2lmMVVrUHNXN25CNFVzenJCbWRFMUxad2N5VVMxaF9nd3d5UGVlZXVOMVZGRTZacGItOTlBaG14ZUVHNmNNUHplek1KaENRR2RDbmJkcXphTHc4c1lKdXJIOW5MTWx6NVpZZFgtMWExU2Z3azBtQkRMOHVINjkxUU5DOUM4NDloM2RUdHZkaGl6MWM4WkRwZkQ4Rml1YWJXWFNzMTFHWXFvQTc1TmQySjUwbEN4TWR5OGVfNWxn")
 }
 
 func TestVaultBadSignature(t *testing.T) {
@@ -53,7 +53,7 @@ func TestVaultBadSignature(t *testing.T) {
 		},
 	}}
 
-	jwtToken := jwt.NewWithClaims(SigningMethodVRS256, jwt.MapClaims{
+	jwtToken := jwt.NewWithClaims(SigningMethodRS256, jwt.MapClaims{
 		"foo": "bar",
 		"nbf": time.Date(2015, 10, 10, 12, 0, 0, 0, time.UTC).Unix(),
 	})
