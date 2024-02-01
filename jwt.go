@@ -10,9 +10,9 @@ import (
 )
 
 var (
-	SigningMethodVRS256 *SigningMethodVaultTransit
-	SigningMethodVRS384 *SigningMethodVaultTransit
-	SigningMethodVRS512 *SigningMethodVaultTransit
+	SigningMethodRS256 *SigningMethodVaultTransit
+	SigningMethodRS384 *SigningMethodVaultTransit
+	SigningMethodRS512 *SigningMethodVaultTransit
 
 	// ErrMissingConfig is returned when Sign or Verify did not find a configuration in the provided context
 	ErrMissingConfig = errors.New("go_vault_jwt: missing configuration in provided context")
@@ -40,31 +40,31 @@ func VaultFromContext(ctx context.Context) (*VaultConfig, bool) {
 
 func init() {
 	// RS256
-	SigningMethodVRS256 = &SigningMethodVaultTransit{
+	SigningMethodRS256 = &SigningMethodVaultTransit{
 		jwt.GetSigningMethod("RS256"),
 		jwt.SigningMethodRS256,
 		crypto.SHA256,
 	}
-	jwt.RegisterSigningMethod(SigningMethodVRS256.Alg(), func() jwt.SigningMethod {
-		return SigningMethodVRS256
+	jwt.RegisterSigningMethod(SigningMethodRS256.Alg(), func() jwt.SigningMethod {
+		return SigningMethodRS256
 	})
 	// RS384
-	SigningMethodVRS384 = &SigningMethodVaultTransit{
+	SigningMethodRS384 = &SigningMethodVaultTransit{
 		jwt.GetSigningMethod("RS384"),
 		jwt.SigningMethodRS384,
 		crypto.SHA384,
 	}
-	jwt.RegisterSigningMethod(SigningMethodVRS384.Alg(), func() jwt.SigningMethod {
-		return SigningMethodVRS384
+	jwt.RegisterSigningMethod(SigningMethodRS384.Alg(), func() jwt.SigningMethod {
+		return SigningMethodRS384
 	})
 	// RS512
-	SigningMethodVRS512 = &SigningMethodVaultTransit{
+	SigningMethodRS512 = &SigningMethodVaultTransit{
 		jwt.GetSigningMethod("RS512"),
 		jwt.SigningMethodRS512,
 		crypto.SHA512,
 	}
-	jwt.RegisterSigningMethod(SigningMethodVRS512.Alg(), func() jwt.SigningMethod {
-		return SigningMethodVRS512
+	jwt.RegisterSigningMethod(SigningMethodRS512.Alg(), func() jwt.SigningMethod {
+		return SigningMethodRS512
 	})
 }
 
