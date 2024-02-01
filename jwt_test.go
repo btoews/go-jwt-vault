@@ -11,23 +11,11 @@ import (
 	"github.com/hashicorp/vault/api"
 )
 
-// type mockLogicalfunc func(context.Context, string, map[string]interface{}) (*api.Secret, error)
-
 type mockLogical struct {
 	secret *api.Secret
 }
 
-// func (m *mockLogical) WriteWithContext(ctx context.Context, path string, data map[string]interface{}) (*api.Secret, error) {
-
-// 	if m.mockLogicalfunc != nil {
-// 		return m.mockLogicalfunc(ctx, path, data)
-// 	}
-// 	return nil, errors.New("not implemented")
-// }
-
 func (m *mockLogical) WriteWithContext(ctx context.Context, path string, data map[string]interface{}) (*api.Secret, error) {
-	// args := m.Called(ctx, path, data)
-	// return args.Get(0).(*api.Secret), args.Error(1)
 	if m.secret != nil {
 		return m.secret, nil
 	}
